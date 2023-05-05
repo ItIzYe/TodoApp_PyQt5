@@ -1,138 +1,126 @@
-import json
-import sys
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-
-class Fenster(QWidget):
-    def __init__(self):
-        super(Fenster, self).__init__()
-
-        self.menue()
-    def menue(self):
-        file = 'todos.json'
-        self.biglabel = QLabel(self)
-        self.biglabel.setText("TODO APP")
-        self.biglabel.setStyleSheet("QLabel{height: 100px; width: 1080px; align-text: center; "
-                                    "background-color: #121212; color: white;}")
-        self.biglabel.resize(1920, 1080)
-        self.biglabel.setAlignment(Qt.AlignHCenter)
-        self.biglabel.setFont(QtGui.QFont('Bahnschrift', 40, QtGui.QFont.Bold))
-        self.biglabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+import multiprocessing
+import ast
+from win10toast import ToastNotifier as tn
+import time
+from multiprocessing import process
+import datetime
 
 
-        self.wodo = QLineEdit(self)
-        self.wodo.setStyleSheet("border-radius: 50px; align-items: center;")
-        self.wodo.setPlaceholderText("Add Todo name...")
-        self.wodo.setFont(QtGui.QFont('Bahnschrift', 20, QtGui.QFont.Bold))
-        self.wodo.move(840, 200)
+toast = tn()
 
-        self.wesc = QLineEdit(self)
-        self.wesc.setStyleSheet("border-radius: 50px; align-items: center;")
-        self.wesc.setPlaceholderText("Add description...")
-        self.wesc.setFont(QtGui.QFont('Bahnschrift', 20, QtGui.QFont.Bold))
-        self.wesc.move(840, 300)
+input_string = f"{datetime.datetime.now()}"
+input_format = "%Y-%m-%d %H:%M:%S.%f"
+datetime_obj = datetime.datetime.strptime(input_string, input_format)
+year = datetime_obj.year
+month = datetime_obj.month
+day = datetime_obj.day
+hour = datetime_obj.hour
+minute = datetime_obj.minute
+sec = datetime_obj.second
+timeI = f"{year}-{month}-{day} {hour}:{minute}:{sec}"
+print(timeI)
 
-        self.wimer = QLineEdit(self)
-        self.wimer.setStyleSheet("border-radius: 50px; align-items: center;")
-        self.wimer.setPlaceholderText("Add Timer...")
-        self.wimer.setFont(QtGui.QFont('Bahnschrift', 20, QtGui.QFont.Bold))
-        self.wimer.move(840, 400)
+s = 1
+a = []
+number = 0
+timeStringI = timeI
 
+"""
+def todos():
+    while s == 1:
+        #it = input('Please enter Todo\n')
+        t#i = input('Please enter due date\n')
 
-        self.wabel = QLineEdit(self)
-        self.wabel.setStyleSheet("border-radius: 50px; align-items: center;")
-        self.wabel.setPlaceholderText("Add Label...")
-        self.wabel.setFont(QtGui.QFont('Bahnschrift', 20, QtGui.QFont.Bold))
-        self.wabel.move(840, 500)
+        ts = datetime.datetime.strptime(ti, '%Y-%m-%d %H:%M:%S')
+        year = ts.year
+        month = ts.month
+        day = ts.day
+        hour = ts.hour
+        minute = ts.minute
+        sec = ts.second
+        timeStringI = f"{year}-{month}-{day} {hour}:{minute}:{sec}"
 
-        self.button = QPushButton(self)
-        self.button.move(840, 650)
-        self.button.resize(100, 25)
-        #button.setStyleSheet("button{border-radius: 20px}")
-        #self.button.setGeometry(100, 100, 65, 35)
-        self.button.clicked.connect(self.clicked_todo)
-        self.button.clicked.connect(self.clicked_desc)
-        self.button.clicked.connect(self.clicked_timer)
-        self.button.clicked.connect(self.clicked_label)
+        global g
+        g = a
+        g.append(it)
 
-        self.button.clicked.connect(self.save_todos)
+        for i in g:
+            number1 = number
+            print(number1, i)
+            number1 = number1 +1
+            #print(timeStringI)
+            #print( timeI)
+"""
 
-        #yn = input("print?")
-        #if yn.lower() == "y":
-        #    for key in data['todos']['label']['work']:
-        #        print(key)
+def notifications(timeI, timeStringI, g):
 
+    #n = map(ast.literal_eval, g)
+    n = [x.encode('UTF8') for x in g]
+    #y = [i.decode('utf-8') if isinstance(i, list) else i for i in g]
+    #timeII = ast.literal_eval(timeI)
+    #timeStringII = ast.literal_eval(timeStringI)
 
-        self.setWindowTitle("")
-        self.setWindowIcon(QIcon("img/r.png"))
-        self.showMaximized()
+    while(timeI != timeStringI ):
 
-    def clicked_todo(self, text):
-        print(self.wodo.text())
-        self.todo_a = self.wodo.text()
+        #print('a')
 
-    def clicked_desc(self, text):
-        print(self.wesc.text())
-        self.desc_a = self.wesc.text()
+        input_string = f"{datetime.datetime.now()}"
+        input_format = "%Y-%m-%d %H:%M:%S.%f"
 
-    def clicked_timer(self, text):
-        print(self.wimer.text())
-        self.timer_a = self.wimer.text()
+        datetime_obj = datetime.datetime.strptime(input_string, input_format)
 
-    def clicked_label(self, text):
-        print(self.wabel.text())
-        self.label_a = self.wabel.text()
+        year = datetime_obj.year
+        month = datetime_obj.month
+        day = datetime_obj.day
+        hour = datetime_obj.hour
+        minute = datetime_obj.minute
+        sec = datetime_obj.second
 
+        timeI = f"{year}-{month}-{day} {hour}:{minute}:{sec}"
 
-    def save_todos (self):
-        print("check")
-        if self.label_a.lower() == 'work':
-            print("test1 comp")
-            self.file = open("todos.json", 'r')
-            self.data = json.load(self.file)
-            self.todo_a.close()
-            self.file = open("todos.json", 'w')
-            self.list = {self.todo_a: {"description": self.desc_a,
-                                        "timer": self.timer_a}}
-            print("check")
-            self.data['todos']['label']['work'].update(list)
-            json.dump(self.data, self.file, indent=4)
-            self.file.close()
-
-        if self.wabel.text().lower() == 'edu':
-            print("test2 comp")
-            file = open(file, 'r')
-            data = json.load(file)
-            file.close()
-            file = open("todos.json", 'w')
-            list = {self.wodo.text(): {"description": self.wesc.text(),
-                           "timer": self.wimer.text()}}
-
-            data['todos']['label']['edu'].update(list)
-            json.dump(data, file, indent=4)
-            file.close()
-
-        if self.wabel.text().lower() == 'personal':
-            print("test3 comp")
-            file = open(file, 'r')
-            data = json.load(file)
-            file.close()
-            file = open("todos.json", 'w')
-            list = {self.wodo.text(): {"description": self.wesc.text(),
-                           "timer": self.wimer.text()}}
-
-            data['todos']['label']['personal'].update(list)
-            json.dump(data, file, indent=4)
-            file.close()
+    toast.show_toast(
+                "Mitteilung",
+                g[0],
+                duration= 20,
+                threaded= True,
+                icon_path="img/icon.ico"
+    )
 
 
-app = QApplication(sys.argv)
+### Start Multiprocessing
+### if var g has a value, give it to the Notifications function
+### else don't. Not working right now which's why I had to get g a value
+### maybe start later?
+if __name__ == '__main__':
+    #while s == 1:
+    it = input('Please enter Todo\n')
+    ti = input('Please enter due date\n')
 
-w = Fenster()
-w.show()
+    ts = datetime.datetime.strptime(ti, '%Y-%m-%d %H:%M:%S')
+    year = ts.year
+    month = ts.month
+    day = ts.day
+    hour = ts.hour
+    minute = ts.minute
+    sec = ts.second
+    timeStringI = f"{year}-{month}-{day} {hour}:{minute}:{sec}"
 
-sys.exit(app.exec_())
+    g = a
+    g.append(it)
 
+    for i in g:
+        number1 = number
+        print(number1, i)
+        number1 = number1 + 1
+        # print(timeStringI)
+        # print( timeI)
+
+    queue = multiprocessing.Queue()
+
+    #p1 = multiprocessing.Process(target=todos)
+    #p1.start()
+    #p1.join()
+    p2 = multiprocessing.Process(target=notifications, args=(timeI, timeStringI, g))
+    p2.start()
+    p2.join()
 
